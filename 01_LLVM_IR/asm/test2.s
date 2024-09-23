@@ -4,7 +4,7 @@
 
 .section .rodata
 .LC0:
-.string "x = %d, y = %d\n"
+.string "x = %f, y = %f\n"
 
 .text
 .align 1
@@ -21,16 +21,18 @@ main:
     # 按照线性结构存储结构体
     addi sp, sp, -TEST_SIZE
     li t0, 10
-    sw t0, TEST_X_OFFSET(sp)
+    fmv.w.x ft0, t0
+    fsw ft0, TEST_X_OFFSET(sp)
 
     li t1, 20
-    sw t1, TEST_Y_OFFSET(sp)
+    fmv.w.x ft1, t1
+    fsw ft1, TEST_Y_OFFSET(sp)
 
     # 调用printf
     lui a5, %hi(.LC0)
     addi a0, a5, %lo(.LC0) # 装载字符串地址
-    lw a1, TEST_X_OFFSET(sp)
-    lw a2, TEST_Y_OFFSET(sp)
+    flw fa1, TEST_X_OFFSET(sp)
+    flw fa2, TEST_Y_OFFSET(sp)
     call printf
 
     addi sp, sp, TEST_SIZE
